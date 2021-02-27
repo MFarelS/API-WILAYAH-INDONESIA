@@ -33,13 +33,10 @@ const newName = (name) => {
 };
 
 const CapitalizeEachWord = (text) => {
-	const words = text.toLowerCase().split(' ');
-	const res = words
-		.map((word) => {
-			return word[0].toUpperCase() + word.substring(1);
-		})
-		.join(' ');
-	return res;
+	const words = text.toLowerCase();
+	return words.replace(/\w\S*/g, (txt) => {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
 };
 
 app.get('/provinsi', async (req, res) => {
@@ -76,17 +73,21 @@ app.get('/kabupaten', async (req, res) => {
 });
 
 app.get('/kecamatan', async (req, res) => {
-	const read = await csv().fromFile('./csv/kecamatan.csv');
-	const response = read.map((kec) => ({
-		id: kec['1101010'],
-		kab_id: kec['1101'],
-		name: CapitalizeEachWord(kec['TEUPAH SELATAN']),
-	}));
-	const findbyId = response.filter(
-		(el) => el.kab_id === req.query.id_kecamatan,
-	);
-	if (req.query.id_kecamatan) res.status(200).json(findbyId);
-	res.status(200).json(response);
+	try {
+		const read = await csv().fromFile('./csv/kecamatan.csv');
+		const response = read.map((kec) => ({
+			id: kec['1101010'],
+			kab_id: kec['1101'],
+			name: CapitalizeEachWord(kec['TEUPAH SELATAN']),
+		}));
+		const findbyId = response.filter(
+			(el) => el.kab_id === req.query.id_kecamatan,
+		);
+		if (req.query.id_kecamatan) res.status(200).json(findbyId);
+		res.status(200).json(response);
+	} catch (error) {
+		res.send(error.message);
+	}
 });
 
 app.get('/kelurahan', async (req, res) => {
