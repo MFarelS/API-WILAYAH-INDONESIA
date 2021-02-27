@@ -33,7 +33,7 @@ const newName = (name) => {
 };
 
 const CapitalizeEachWord = (text) => {
-	const words = text.split(' ');
+	const words = text.toLowerCase().split(' ');
 	words
 		.map((word) => {
 			return word[0].toUpperCase() + word.substring(1);
