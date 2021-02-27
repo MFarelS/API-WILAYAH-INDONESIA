@@ -34,11 +34,12 @@ const newName = (name) => {
 
 const CapitalizeEachWord = (text) => {
 	const words = text.toLowerCase().split(' ');
-	words
+	const res = words
 		.map((word) => {
 			return word[0].toUpperCase() + word.substring(1);
 		})
 		.join(' ');
+	return res;
 };
 
 app.get('/provinsi', async (req, res) => {
