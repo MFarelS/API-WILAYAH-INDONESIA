@@ -32,12 +32,21 @@ const newName = (name) => {
 	return result;
 };
 
+const CapitalizeEachWord = (text) => {
+	const words = text.split(' ');
+	words
+		.map((word) => {
+			return word[0].toUpperCase() + word.substring(1);
+		})
+		.join(' ');
+};
+
 app.get('/provinsi', async (req, res) => {
 	const read = await csv().fromFile('./csv/provinsi.csv');
 
 	const response = read.map((prov) => ({
 		id: prov['11'],
-		name: prov['ACEH'],
+		name: CapitalizeEachWord(prov['ACEH']),
 	}));
 
 	const findbyId = response.filter((el) => el.id === req.query.id);
@@ -53,7 +62,7 @@ app.get('/kabupaten', async (req, res) => {
 	const response = read.map((kab) => ({
 		id: kab['1101'],
 		prov_id: kab['11'],
-		name: newName(kab['KABUPATEN SIMEULUE']),
+		name: CapitalizeEachWord(newName(kab['KABUPATEN SIMEULUE'])),
 	}));
 
 	const findbyId = response.filter(
@@ -70,7 +79,7 @@ app.get('/kecamatan', async (req, res) => {
 	const response = read.map((kec) => ({
 		id: kec['1101010'],
 		kab_id: kec['1101'],
-		name: kec['TEUPAH SELATAN'],
+		name: CapitalizeEachWord(kec['TEUPAH SELATAN']),
 	}));
 	const findbyId = response.filter(
 		(el) => el.kab_id === req.query.id_kecamatan,
@@ -84,7 +93,7 @@ app.get('/kelurahan', async (req, res) => {
 	const response = read.map((kel) => ({
 		id: kel['1101010001'],
 		kec_id: kel['1101010'],
-		name: kel['LATIUNG'],
+		name: CapitalizeEachWord(kel['LATIUNG']),
 	}));
 	const findbyId = response.filter(
 		(el) => el.kec_id === req.query.id_kelurahan,
